@@ -1,0 +1,1054 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="نظام بلاغات مخيم الحجاج - 1446هـ">
+<title>🕌 نظام بلاغات المخيم</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --pr:#1a3a5c;--pr2:#2563a8;--pr3:#3b82f6;
+  --gold:#c4973a;--gold2:#f0c96b;
+  --ok:#16a34a;--ok-bg:#dcfce7;--ok-b:#86efac;
+  --warn:#d97706;--warn-bg:#fef3c7;--warn-b:#fcd34d;
+  --err:#dc2626;--err-bg:#fee2e2;
+  --men:#1e40af;--men-l:#dbeafe;
+  --women:#9d174d;--women-l:#fce7f3;
+  --bg:#f0f4f8;--card:#fff;--border:#e2e8f0;
+  --txt:#1e293b;--muted:#64748b;
+  --sh:0 1px 3px rgba(0,0,0,.08);
+  --sh2:0 4px 16px rgba(0,0,0,.1);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Cairo',sans-serif;background:var(--bg);color:var(--txt);min-height:100vh}
+
+/* ── LOGIN ── */
+#login-screen{display:flex;align-items:center;justify-content:center;min-height:100vh;
+  background:linear-gradient(135deg,#0c1f3a 0%,#1a3a5c 55%,#1e4976 100%)}
+.lbox{background:#fff;border-radius:24px;padding:48px 40px;width:400px;max-width:95vw;
+  box-shadow:0 20px 60px rgba(0,0,0,.4)}
+.llogo{width:64px;height:64px;border-radius:16px;margin:0 auto 18px;
+  background:linear-gradient(135deg,var(--gold),var(--gold2));
+  display:flex;align-items:center;justify-content:center;font-size:30px}
+.lbrand{text-align:center;font-size:21px;font-weight:900;margin-bottom:4px}
+.lsub{text-align:center;font-size:12px;color:var(--muted);margin-bottom:30px}
+.lf{margin-bottom:16px}
+.lf label{display:block;font-size:12px;font-weight:700;margin-bottom:6px}
+.lf input{width:100%;padding:10px 13px;border:1.5px solid var(--border);border-radius:10px;
+  font-family:'Cairo',sans-serif;font-size:14px;outline:none;transition:border-color .2s}
+.lf input:focus{border-color:var(--pr3)}
+.lbtn{width:100%;padding:13px;background:linear-gradient(135deg,var(--pr),var(--pr2));
+  color:#fff;border:none;border-radius:12px;font-family:'Cairo',sans-serif;
+  font-size:15px;font-weight:700;cursor:pointer;transition:opacity .2s}
+.lbtn:hover{opacity:.9}
+.lerr{background:var(--err-bg);color:var(--err);border-radius:10px;padding:10px 14px;
+  font-size:12px;font-weight:600;margin-top:12px;display:none}
+.ldemo{margin-top:18px;font-size:11px;color:var(--muted);text-align:center}
+
+/* ── APP ── */
+#app{display:none}
+.topbar{background:linear-gradient(135deg,#0c1f3a,#1a3a5c);padding:0 20px;
+  display:flex;align-items:center;justify-content:space-between;height:60px;
+  position:sticky;top:0;z-index:100;box-shadow:0 2px 20px rgba(0,0,0,.3)}
+.tb-brand{display:flex;align-items:center;gap:10px}
+.tb-logo{width:36px;height:36px;border-radius:9px;
+  background:linear-gradient(135deg,var(--gold),var(--gold2));
+  display:flex;align-items:center;justify-content:center;font-size:18px}
+.tb-title{color:#fff;font-size:15px;font-weight:700}
+.tb-sub{color:rgba(255,255,255,.5);font-size:10px}
+.sec-tabs{display:flex;gap:2px;background:rgba(255,255,255,.1);border-radius:20px;padding:3px}
+.sec-btn{padding:5px 15px;border-radius:16px;border:none;background:transparent;
+  color:rgba(255,255,255,.65);font-family:'Cairo',sans-serif;font-size:12px;
+  font-weight:600;cursor:pointer;transition:all .15s}
+.sec-btn.on{background:#fff;color:var(--pr)}
+.sec-btn.on.w{color:var(--women)}
+.tb-right{display:flex;align-items:center;gap:9px}
+.tb-user{display:flex;align-items:center;gap:7px;background:rgba(255,255,255,.1);
+  border-radius:18px;padding:5px 13px;color:#fff;font-size:12px}
+.rb{padding:2px 8px;border-radius:9px;font-size:10px;font-weight:700}
+.rb-gm{background:#fef3c7;color:#b45309}
+.rb-sm{background:#dbeafe;color:#1e40af}
+.rb-sv{background:#f0fdf4;color:#15803d}
+.logout{padding:5px 12px;border:1px solid rgba(255,255,255,.25);background:transparent;
+  color:rgba(255,255,255,.8);border-radius:18px;font-family:'Cairo',sans-serif;
+  font-size:12px;cursor:pointer;transition:all .2s}
+.logout:hover{background:rgba(255,255,255,.15)}
+
+/* ── LAYOUT ── */
+.layout{display:flex;min-height:calc(100vh - 60px)}
+.sidebar{width:236px;background:var(--card);border-left:1px solid var(--border);
+  padding:14px 0;position:sticky;top:60px;height:calc(100vh - 60px);
+  overflow-y:auto;flex-shrink:0}
+.main{flex:1;padding:20px;overflow-x:hidden}
+
+/* Sidebar nav */
+.nsc{padding:5px 15px;font-size:10px;color:var(--muted);font-weight:700;
+  letter-spacing:.06em;text-transform:uppercase;margin-top:6px}
+.ni{display:flex;align-items:center;gap:8px;padding:8px 10px;border-radius:9px;
+  cursor:pointer;font-size:12px;font-weight:600;color:var(--muted);
+  transition:all .15s;border:none;background:none;
+  width:calc(100% - 8px);text-align:right;margin:1px 4px}
+.ni:hover{background:var(--bg);color:var(--txt)}
+.ni.on{background:var(--men-l);color:var(--men)}
+.ni.on.w{background:var(--women-l);color:var(--women)}
+.ni-ic{width:27px;height:27px;border-radius:7px;display:flex;align-items:center;
+  justify-content:center;font-size:13px;background:var(--bg);flex-shrink:0}
+.nb{margin-right:auto;background:var(--err);color:#fff;border-radius:8px;
+  padding:1px 7px;font-size:10px;font-weight:700}
+.nb.w2{background:var(--warn)}
+
+/* Stats grid */
+.sg{display:grid;grid-template-columns:repeat(4,1fr);gap:13px;margin-bottom:18px}
+.sc{background:var(--card);border-radius:13px;padding:15px 17px;
+  border:1px solid var(--border);position:relative;overflow:hidden;box-shadow:var(--sh)}
+.sc::after{content:'';position:absolute;right:0;top:0;width:4px;height:100%;border-radius:2px}
+.sc.b::after{background:var(--men)}.sc.g::after{background:var(--gold)}
+.sc.ok::after{background:var(--ok)}.sc.r::after{background:var(--err)}
+.sc-n{font-size:28px;font-weight:900;line-height:1}
+.sc-l{font-size:11px;color:var(--muted);margin-top:5px;font-weight:600}
+.sc-i{position:absolute;left:13px;top:50%;transform:translateY(-50%);font-size:24px;opacity:.1}
+
+/* Cards */
+.card{background:var(--card);border-radius:13px;border:1px solid var(--border);
+  overflow:hidden;box-shadow:var(--sh)}
+.card-h{padding:13px 16px;border-bottom:1px solid var(--border);
+  display:flex;align-items:center;justify-content:space-between}
+.card-t{font-size:13px;font-weight:700;display:flex;align-items:center;gap:7px}
+.cnt{background:var(--bg);border-radius:8px;padding:2px 9px;font-size:11px;
+  color:var(--muted);font-weight:600}
+
+/* Table */
+table{width:100%;border-collapse:collapse;font-size:12px}
+th{background:var(--bg);padding:9px 13px;text-align:right;font-size:10px;
+  font-weight:700;color:var(--muted);white-space:nowrap}
+td{padding:10px 13px;border-top:1px solid var(--border);vertical-align:middle}
+tr:hover td{background:rgba(241,245,249,.4)}
+.num{font-weight:700;color:var(--pr)}
+
+/* Badges */
+.badge{display:inline-flex;align-items:center;gap:3px;padding:2px 9px;
+  border-radius:18px;font-size:11px;font-weight:700;white-space:nowrap}
+.s-p{background:var(--warn-bg);color:var(--warn)}
+.s-i{background:var(--men-l);color:var(--men)}
+.s-c{background:var(--ok-bg);color:var(--ok)}
+.s-u{background:var(--err-bg);color:var(--err)}
+.cbadge{display:inline-flex;align-items:center;gap:3px;padding:2px 9px;
+  border-radius:7px;font-size:11px;font-weight:600}
+.c1{background:#e0f2fe;color:#0369a1}.c2{background:#fef3c7;color:#b45309}
+.c3{background:#f0fdf4;color:#15803d}.c4{background:#fdf4ff;color:#9333ea}
+.c5{background:#fce7f3;color:#9d174d}.c6{background:#f1f5f9;color:#475569}
+
+/* Buttons */
+.btn{padding:5px 13px;border-radius:8px;border:1px solid var(--border);
+  background:var(--bg);font-family:'Cairo',sans-serif;font-size:11px;
+  font-weight:700;cursor:pointer;transition:all .15s}
+.btn:hover{background:var(--pr);color:#fff;border-color:var(--pr)}
+.btn-ok{background:var(--ok-bg);color:var(--ok);border-color:var(--ok-b)}
+.btn-ok:hover{background:var(--ok);color:#fff}
+.btn-pr{background:linear-gradient(135deg,var(--pr),var(--pr2));color:#fff;border:none}
+.btn-pr:hover{opacity:.9;transform:translateY(-1px)}
+.btn-gold{background:linear-gradient(135deg,var(--gold),#e0a83f);color:#fff;border:none}
+.btn-gold:hover{opacity:.9}
+
+/* Filter bar */
+.fb{display:flex;align-items:center;gap:9px;flex-wrap:wrap;
+  background:var(--card);border-radius:11px;padding:11px 14px;
+  border:1px solid var(--border);margin-bottom:14px;box-shadow:var(--sh)}
+.fb select,.fb input[type=text]{font-family:'Cairo',sans-serif;font-size:12px;
+  padding:6px 10px;border:1px solid var(--border);border-radius:7px;
+  background:var(--bg);outline:none;color:var(--txt)}
+.fb input[type=text]{width:170px}
+
+/* Page headings */
+.pg-t{font-size:20px;font-weight:900;margin-bottom:3px}
+.pg-s{font-size:12px;color:var(--muted);margin-bottom:18px}
+
+/* Dashboard */
+.dg{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:16px}
+.pw{margin-bottom:10px}
+.pr-row{display:flex;align-items:center;justify-content:space-between;font-size:11px;margin-bottom:3px}
+.pbar{height:7px;background:var(--bg);border-radius:4px;overflow:hidden}
+.pfill{height:100%;border-radius:4px;transition:width .6s}
+.tl{position:relative;padding-right:16px}
+.tl::before{content:'';position:absolute;right:0;top:0;bottom:0;width:2px;background:var(--border)}
+.tli{position:relative;padding:0 13px 13px 0}
+.tld{position:absolute;right:-4px;top:2px;width:9px;height:9px;
+  border-radius:50%;border:2px solid var(--card)}
+.tld.ok{background:var(--ok)}.tld.w{background:var(--warn)}.tld.pr{background:var(--pr)}
+.tlt{font-size:10px;color:var(--muted)}
+.tlx{font-size:11px;font-weight:700;margin-top:1px}
+.tls{font-size:10px;color:var(--muted);margin-top:1px}
+
+/* Status strip */
+.sp2{display:flex;gap:18px;align-items:center;background:var(--card);
+  border-radius:11px;padding:12px 16px;border:1px solid var(--border);
+  font-size:12px;flex-wrap:wrap;margin-bottom:16px;box-shadow:var(--sh)}
+.sdot{width:7px;height:7px;border-radius:50%}
+.sdot.p{background:var(--warn)}.sdot.i{background:var(--men)}.sdot.c{background:var(--ok)}
+.si2{display:flex;align-items:center;gap:6px;font-weight:600}
+
+/* Modal */
+.overlay{position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:200;
+  display:none;align-items:center;justify-content:center;backdrop-filter:blur(3px)}
+.overlay.on{display:flex}
+.modal{background:var(--card);border-radius:20px;padding:28px;
+  width:520px;max-width:95vw;max-height:90vh;overflow-y:auto;
+  animation:slideup .22s ease}
+@keyframes slideup{from{transform:translateY(16px);opacity:0}to{transform:none;opacity:1}}
+.mh{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px}
+.mt{font-size:16px;font-weight:800}
+.mx{background:var(--bg);border:none;border-radius:7px;width:30px;height:30px;
+  cursor:pointer;font-size:16px;display:flex;align-items:center;justify-content:center}
+.fr{margin-bottom:14px}
+.fr label{display:block;font-size:12px;font-weight:700;margin-bottom:5px}
+.fr label span{color:var(--err)}
+.fc{width:100%;padding:9px 12px;border:1.5px solid var(--border);border-radius:9px;
+  font-family:'Cairo',sans-serif;font-size:13px;outline:none;
+  transition:border-color .2s;background:var(--bg)}
+.fc:focus{border-color:var(--pr3);background:#fff}
+textarea.fc{resize:vertical;min-height:80px}
+.fg{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.fb2{width:100%;padding:12px;border-radius:11px;font-family:'Cairo',sans-serif;
+  font-size:14px;font-weight:700;cursor:pointer;border:none;margin-top:5px}
+.fb2.pr{background:linear-gradient(135deg,var(--pr),var(--pr2));color:#fff}
+.fb2.sec{background:var(--bg);color:var(--muted);border:1px solid var(--border)}
+.fb2:hover{opacity:.9}
+.nbox{background:#eff6ff;border:1px solid #bfdbfe;border-radius:10px;
+  padding:11px 14px;font-size:12px;color:#1d4ed8;font-weight:600;
+  display:flex;align-items:center;gap:9px;margin:12px 0 4px}
+
+/* Toast */
+.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);
+  background:#1e293b;color:#fff;padding:12px 22px;border-radius:12px;
+  font-size:13px;font-weight:600;z-index:400;opacity:0;transition:opacity .3s;
+  display:flex;align-items:center;gap:9px;box-shadow:0 8px 32px rgba(0,0,0,.3);
+  white-space:nowrap}
+.toast.on{opacity:1}.toast.ok{background:#15803d}.toast.err{background:var(--err)}
+
+/* Loading */
+.ld{display:flex;align-items:center;justify-content:center;padding:50px;
+  color:var(--muted);font-size:13px;gap:9px}
+.spin{width:18px;height:18px;border:2px solid var(--border);
+  border-top-color:var(--pr);border-radius:50%;animation:spin .7s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* Role chip */
+.rc{display:inline-block;padding:2px 9px;border-radius:8px;font-size:10px;font-weight:700}
+.rc-gm{background:#EEEDFE;color:#3C3489}
+.rc-sm{background:#E6F1FB;color:#0C447C}
+.rc-sv{background:#EAF3DE;color:#27500A}
+
+/* Responsive */
+@media(max-width:900px){.sidebar{display:none}.sg{grid-template-columns:1fr 1fr}.dg{grid-template-columns:1fr}}
+@media(max-width:500px){.sg{grid-template-columns:1fr 1fr}.tb-sub{display:none}.sec-tabs{display:none}}
+</style>
+</head>
+<body>
+
+<!-- LOGIN -->
+<div id="login-screen">
+  <div class="lbox">
+    <div class="llogo">🕌</div>
+    <div class="lbrand">نظام بلاغات المخيم</div>
+    <div class="lsub">حج 1446هـ — يرجى تسجيل الدخول</div>
+    <div class="lf"><label>اسم المستخدم</label>
+      <input id="lu" autocomplete="username" placeholder="admin"
+             onkeydown="if(event.key==='Enter')login()"></div>
+    <div class="lf"><label>كلمة المرور</label>
+      <input id="lp" type="password" autocomplete="current-password" placeholder="••••••••"
+             onkeydown="if(event.key==='Enter')login()"></div>
+    <button class="lbtn" onclick="login()">دخول</button>
+    <div class="lerr" id="lerr"></div>
+    <div class="ldemo">admin / Admin@1446 &nbsp;|&nbsp; musab / Pass@1446</div>
+  </div>
+</div>
+
+<!-- APP -->
+<div id="app">
+  <header class="topbar">
+    <div class="tb-brand">
+      <div class="tb-logo">🕌</div>
+      <div><div class="tb-title">نظام بلاغات المخيم</div><div class="tb-sub">حج 1446هـ</div></div>
+    </div>
+    <div class="sec-tabs" id="sectabs" style="display:none">
+      <button class="sec-btn on" onclick="setSec('men',this)">👨 الرجال</button>
+      <button class="sec-btn w" onclick="setSec('women',this)">👩 النساء</button>
+    </div>
+    <div class="tb-right">
+      <div class="tb-user"><span id="tbn">—</span><span class="rb" id="tbrb"></span></div>
+      <button class="logout" onclick="logout()">خروج</button>
+    </div>
+  </header>
+
+  <div class="layout">
+    <aside class="sidebar">
+      <div class="nsc">الرئيسية</div>
+      <button class="ni on" id="ni-d" onclick="go('d')"><div class="ni-ic">📊</div>لوحة التحكم</button>
+      <button class="ni"    id="ni-a" onclick="go('a')"><div class="ni-ic">📋</div>جميع البلاغات<span class="nb w2" id="nb-o">0</span></button>
+      <button class="ni"    id="ni-p" onclick="go('p')"><div class="ni-ic">⏳</div>قيد الانتظار<span class="nb" id="nb-p">0</span></button>
+      <button class="ni"    id="ni-c" onclick="go('c')"><div class="ni-ic">✅</div>مغلقة</button>
+      <div class="nsc" id="adm-sec" style="display:none">الإدارة</div>
+      <button class="ni" id="ni-u" style="display:none" onclick="go('u')"><div class="ni-ic">👥</div>المستخدمون</button>
+      <div class="nsc">سريع</div>
+      <button class="ni" onclick="openRM()"><div class="ni-ic">➕</div>بلاغ جديد</button>
+    </aside>
+
+    <main class="main">
+
+      <!-- DASHBOARD -->
+      <div id="pg-d">
+        <div class="pg-t">لوحة التحكم</div>
+        <div class="pg-s" id="dsub">نظرة شاملة على جميع البلاغات</div>
+        <div class="sg">
+          <div class="sc b"><div class="sc-n" id="st">—</div><div class="sc-l">إجمالي البلاغات</div><div class="sc-i">📋</div></div>
+          <div class="sc g"><div class="sc-n" id="so">—</div><div class="sc-l">قيد المعالجة</div><div class="sc-i">⏳</div></div>
+          <div class="sc ok"><div class="sc-n" id="scl">—</div><div class="sc-l">مغلقة</div><div class="sc-i">✅</div></div>
+          <div class="sc r"><div class="sc-n" id="su">—</div><div class="sc-l">عاجلة</div><div class="sc-i">🚨</div></div>
+        </div>
+        <div class="dg">
+          <div class="card" style="padding:16px">
+            <div class="card-t" style="margin-bottom:12px">📊 توزيع البلاغات حسب التصنيف</div>
+            <div id="catbars"></div>
+          </div>
+          <div class="card" style="padding:16px">
+            <div class="card-t" style="margin-bottom:12px">🕐 آخر النشاطات</div>
+            <div class="tl" id="tldash"></div>
+          </div>
+        </div>
+        <div class="sp2">
+          <div class="si2"><div class="sdot p"></div><span id="s-p">0 بانتظار الاستلام</span></div>
+          <div style="width:1px;height:18px;background:var(--border)"></div>
+          <div class="si2"><div class="sdot i"></div><span id="s-i">0 تحت المعالجة</span></div>
+          <div style="width:1px;height:18px;background:var(--border)"></div>
+          <div class="si2"><div class="sdot c"></div><span id="s-c">0 مكتملة</span></div>
+          <span style="margin-right:auto;font-size:11px;color:var(--muted)">
+            ⏱ متوسط الاستجابة: <strong id="avgr">—</strong>
+            &nbsp;|&nbsp; 📅 <strong id="tdc">—</strong> بلاغ اليوم
+          </span>
+        </div>
+      </div>
+
+      <!-- ALL REPORTS -->
+      <div id="pg-a" style="display:none">
+        <div class="pg-t">جميع البلاغات</div>
+        <div class="pg-s" id="asub">—</div>
+        <div class="fb">
+          <input type="text" id="fs" placeholder="🔍 بحث في البلاغات..." oninput="loadR()">
+          <select id="fst" onchange="loadR()">
+            <option value="">كل الحالات</option>
+            <option value="pending">انتظار</option>
+            <option value="in_progress">معالجة</option>
+            <option value="closed">مغلقة</option>
+          </select>
+          <select id="fca" onchange="loadR()">
+            <option value="">كل الفئات</option>
+            <option>التكييف</option><option>الكهرباء</option>
+            <option>النظافة</option><option>مفقودات</option>
+            <option>عربية</option><option>أخرى</option>
+          </select>
+          <select id="fpr" onchange="loadR()">
+            <option value="">كل الأولويات</option>
+            <option value="urgent">عاجلة</option>
+            <option value="normal">عادية</option>
+          </select>
+          <button class="btn" onclick="clearF()">🔄 مسح</button>
+          <button class="btn btn-gold" style="margin-right:auto" onclick="openRM()">＋ بلاغ جديد</button>
+          <button class="btn" onclick="exportCSV()">⬇ تصدير CSV</button>
+        </div>
+        <div class="card">
+          <div class="card-h">
+            <div class="card-t">📋 سجل البلاغات <span class="cnt" id="rc">0</span></div>
+          </div>
+          <div style="overflow-x:auto">
+            <table><thead><tr>
+              <th>#</th><th>الوقت</th><th>المشرف</th><th>الغرفة</th>
+              <th>الفئة</th><th>البلاغ</th><th>الحالة</th><th>الأولوية</th>
+              <th>مدة الاستجابة</th><th>إجراء</th>
+            </tr></thead><tbody id="rtb"></tbody></table>
+          </div>
+        </div>
+      </div>
+
+      <!-- PENDING -->
+      <div id="pg-p" style="display:none">
+        <div class="pg-t">⏳ البلاغات المعلقة</div>
+        <div class="pg-s">بانتظار الاستجابة والمعالجة</div>
+        <div class="card">
+          <div class="card-h">
+            <div class="card-t">🚨 قيد الانتظار <span class="cnt" id="pc">0</span></div>
+            <button class="btn btn-pr" onclick="openRM()">＋ بلاغ جديد</button>
+          </div>
+          <div style="overflow-x:auto">
+            <table><thead><tr>
+              <th>#</th><th>الوقت</th><th>المشرف</th><th>الغرفة</th>
+              <th>الفئة</th><th>البلاغ</th><th>الأولوية</th><th>إجراء</th>
+            </tr></thead><tbody id="ptb"></tbody></table>
+          </div>
+        </div>
+      </div>
+
+      <!-- CLOSED -->
+      <div id="pg-c" style="display:none">
+        <div class="pg-t">✅ البلاغات المغلقة</div>
+        <div class="pg-s">تم معالجتها بنجاح</div>
+        <div class="card">
+          <div class="card-h">
+            <div class="card-t">✅ المغلقة <span class="cnt" id="cc">0</span></div>
+          </div>
+          <div style="overflow-x:auto">
+            <table><thead><tr>
+              <th>#</th><th>الوقت</th><th>المشرف</th><th>الغرفة</th>
+              <th>البلاغ</th><th>مدة الاستجابة</th><th>أُغلق بواسطة</th>
+            </tr></thead><tbody id="ctb"></tbody></table>
+          </div>
+        </div>
+      </div>
+
+      <!-- USERS -->
+      <div id="pg-u" style="display:none">
+        <div class="pg-t">👥 إدارة المستخدمين</div>
+        <div class="pg-s">إضافة وتعديل حسابات المشرفين والمديرين</div>
+        <div style="margin-bottom:14px">
+          <button class="btn btn-pr" onclick="openUM()">＋ إضافة مستخدم جديد</button>
+        </div>
+        <div class="card">
+          <div style="overflow-x:auto">
+            <table><thead><tr>
+              <th>#</th><th>الاسم</th><th>اسم المستخدم</th><th>الدور</th>
+              <th>القسم</th><th>رقم واتساب</th><th>إشعارات WA</th><th>الحالة</th><th>إجراء</th>
+            </tr></thead><tbody id="utb"></tbody></table>
+          </div>
+        </div>
+      </div>
+
+    </main>
+  </div>
+</div>
+
+<!-- MODAL: New Report -->
+<div class="overlay" id="m-r" onclick="if(event.target===this)closeM('m-r')">
+  <div class="modal">
+    <div class="mh"><div class="mt">📢 رفع بلاغ جديد</div><button class="mx" onclick="closeM('m-r')">✕</button></div>
+    <div class="fg">
+      <div class="fr"><label>القسم <span>*</span></label>
+        <select id="r-s" class="fc"><option value="men">الرجال</option><option value="women">النساء</option></select></div>
+      <div class="fr"><label>الأولوية</label>
+        <select id="r-pr" class="fc"><option value="normal">عادية</option><option value="urgent">🚨 عاجلة</option></select></div>
+    </div>
+    <div class="fg">
+      <div class="fr"><label>رقم الغرفة <span>*</span></label><input id="r-rm" class="fc" placeholder="مثال: 405"></div>
+      <div class="fr"><label>رقم السرير</label><input id="r-bd" class="fc" placeholder="اختياري"></div>
+    </div>
+    <div class="fr"><label>تصنيف البلاغ <span>*</span></label>
+      <select id="r-ca" class="fc">
+        <option value="التكييف">❄️ التكييف</option>
+        <option value="الكهرباء">⚡ الكهرباء</option>
+        <option value="النظافة">🧹 النظافة</option>
+        <option value="مفقودات">🔍 مفقودات</option>
+        <option value="عربية">♿ عربات / إسعاف</option>
+        <option value="أخرى">📌 أخرى</option>
+      </select></div>
+    <div class="fr"><label>تفاصيل البلاغ <span>*</span></label>
+      <textarea id="r-ds" class="fc" placeholder="اكتب وصف البلاغ بوضوح..."></textarea></div>
+    <div class="nbox">ℹ️ سيتلقى مدير القسم والمدير العام إشعاراً فورياً على واتساب عند رفع البلاغ.</div>
+    <button class="fb2 pr" onclick="submitR()">📤 رفع البلاغ الآن</button>
+    <button class="fb2 sec" onclick="closeM('m-r')">إلغاء</button>
+  </div>
+</div>
+
+<!-- MODAL: Close Report -->
+<div class="overlay" id="m-cl" onclick="if(event.target===this)closeM('m-cl')">
+  <div class="modal" style="max-width:400px">
+    <div class="mh"><div class="mt">✅ إغلاق البلاغ</div><button class="mx" onclick="closeM('m-cl')">✕</button></div>
+    <input type="hidden" id="cl-id">
+    <div class="fr"><label>ملاحظة الإغلاق (اختياري)</label>
+      <textarea id="cl-n" class="fc" placeholder="ما الذي تم تنفيذه؟"></textarea></div>
+    <div class="nbox">✅ سيستلم المشرف إشعاراً على واتساب بإغلاق بلاغه.</div>
+    <button class="fb2 pr" onclick="confirmClose()">تأكيد الإغلاق</button>
+    <button class="fb2 sec" onclick="closeM('m-cl')">إلغاء</button>
+  </div>
+</div>
+
+<!-- MODAL: User Management -->
+<div class="overlay" id="m-u" onclick="if(event.target===this)closeM('m-u')">
+  <div class="modal">
+    <div class="mh"><div class="mt" id="umt">➕ إضافة مستخدم</div><button class="mx" onclick="closeM('m-u')">✕</button></div>
+    <input type="hidden" id="u-id">
+    <div class="fg">
+      <div class="fr"><label>الاسم الكامل <span>*</span></label><input id="u-n" class="fc"></div>
+      <div class="fr"><label>اسم المستخدم <span>*</span></label><input id="u-u" class="fc"></div>
+    </div>
+    <div class="fg">
+      <div class="fr"><label>كلمة المرور <span id="upr">*</span></label>
+        <input id="u-p" type="password" class="fc" placeholder="8 أحرف على الأقل"></div>
+      <div class="fr"><label>رقم واتساب</label>
+        <input id="u-ph" class="fc" placeholder="966512345678"></div>
+    </div>
+    <div class="fg">
+      <div class="fr"><label>الدور <span>*</span></label>
+        <select id="u-r" class="fc">
+          <option value="supervisor">مشرف</option>
+          <option value="section_manager">مدير قسم (مقفل البلاغات)</option>
+          <option value="general_manager">مدير عام</option>
+        </select></div>
+      <div class="fr"><label>القسم</label>
+        <select id="u-s" class="fc">
+          <option value="men">رجال</option>
+          <option value="women">نساء</option>
+          <option value="both">كلا القسمين</option>
+        </select></div>
+    </div>
+    <div class="fr"><label><input type="checkbox" id="u-wa" checked style="margin-left:6px"> استقبال إشعارات واتساب</label></div>
+    <button class="fb2 pr" onclick="submitU()">💾 حفظ المستخدم</button>
+    <button class="fb2 sec" onclick="closeM('m-u')">إلغاء</button>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ═══════════════════════════════════════════════════════════
+// STATE
+// ═══════════════════════════════════════════════════════════
+const API = '/api';
+let TOKEN   = localStorage.getItem('camp_tk') || '';
+let ME      = null;
+let curSec  = 'men';
+let curPg   = 'd';
+let cache   = [];
+let toastTimer;
+
+try { ME = JSON.parse(localStorage.getItem('camp_me') || 'null'); } catch {}
+
+// ═══════════════════════════════════════════════════════════
+// HTTP
+// ═══════════════════════════════════════════════════════════
+async function api(method, path, body) {
+  const opts = {
+    method,
+    headers: {
+      'Content-Type': 'application/json',
+      ...(TOKEN ? { Authorization: `Bearer ${TOKEN}` } : {}),
+    },
+  };
+  if (body) opts.body = JSON.stringify(body);
+
+  const res  = await fetch(API + path, opts);
+  const data = await res.json().catch(() => ({}));
+
+  if (res.status === 401) {
+    if (ME) { logout(); toast('انتهت الجلسة، يرجى تسجيل الدخول مجدداً', 'err'); }
+    throw new Error(data.error || 'Unauthorized');
+  }
+  if (!res.ok) throw new Error(data.error || `HTTP ${res.status}`);
+  return data;
+}
+
+// ═══════════════════════════════════════════════════════════
+// AUTH
+// ═══════════════════════════════════════════════════════════
+async function login() {
+  const username = document.getElementById('lu').value.trim();
+  const password = document.getElementById('lp').value;
+  const errEl    = document.getElementById('lerr');
+  errEl.style.display = 'none';
+
+  if (!username || !password) {
+    errEl.textContent    = 'يرجى تعبئة اسم المستخدم وكلمة المرور';
+    errEl.style.display  = 'block';
+    return;
+  }
+
+  try {
+    const data = await api('POST', '/auth/login', { username, password });
+    TOKEN = data.token;
+    ME    = data.user;
+    localStorage.setItem('camp_tk', TOKEN);
+    localStorage.setItem('camp_me', JSON.stringify(ME));
+    initApp();
+  } catch (e) {
+    errEl.textContent   = e.message;
+    errEl.style.display = 'block';
+  }
+}
+
+function logout() {
+  TOKEN = ''; ME = null;
+  localStorage.removeItem('camp_tk');
+  localStorage.removeItem('camp_me');
+  document.getElementById('app').style.display          = 'none';
+  document.getElementById('login-screen').style.display = 'flex';
+  document.getElementById('lu').value = '';
+  document.getElementById('lp').value = '';
+}
+
+// ═══════════════════════════════════════════════════════════
+// INIT
+// ═══════════════════════════════════════════════════════════
+function initApp() {
+  document.getElementById('login-screen').style.display = 'none';
+  document.getElementById('app').style.display          = 'block';
+
+  // Topbar user
+  document.getElementById('tbn').textContent = ME.name;
+  const rb   = document.getElementById('tbrb');
+  const rlbl = { supervisor:'مشرف', section_manager:'مدير قسم', general_manager:'مدير عام' };
+  const rcls = { supervisor:'rb-sv', section_manager:'rb-sm', general_manager:'rb-gm' };
+  rb.textContent = rlbl[ME.role] || ME.role;
+  rb.className   = 'rb ' + (rcls[ME.role] || 'rb-sv');
+
+  // Section tabs: only for non-supervisors
+  if (ME.role !== 'supervisor') {
+    document.getElementById('sectabs').style.display = 'flex';
+  }
+
+  // Admin menu
+  if (ME.role === 'general_manager') {
+    document.getElementById('adm-sec').style.display = '';
+    document.getElementById('ni-u').style.display    = '';
+  }
+
+  // Fix section for supervisor
+  if (ME.role === 'supervisor') {
+    curSec = ME.section === 'women' ? 'women' : 'men';
+    const secSel = document.getElementById('r-s');
+    secSel.value    = curSec;
+    secSel.disabled = true;
+  }
+
+  go('d');
+}
+
+// Auto-login if token available
+if (TOKEN && ME) initApp();
+
+// ═══════════════════════════════════════════════════════════
+// XSS PROTECTION — escape all user data before innerHTML
+// ═══════════════════════════════════════════════════════════
+function esc(str) {
+  if (!str) return '';
+  return String(str)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#x27;');
+}
+function escTrunc(str, len) {
+  const s = esc(str);
+  return s.length > len ? s.substring(0, len) + '…' : s;
+}
+
+// ═══════════════════════════════════════════════════════════
+// NAVIGATION
+// ═══════════════════════════════════════════════════════════
+function go(pg) {
+  ['d','a','p','c','u'].forEach(x => {
+    const el = document.getElementById('pg-' + x);
+    if (el) el.style.display = x === pg ? '' : 'none';
+  });
+  ['d','a','p','c','u'].forEach(x => {
+    const el = document.getElementById('ni-' + x);
+    if (el) { el.classList.remove('on', 'w'); }
+  });
+  const nav = document.getElementById('ni-' + pg);
+  if (nav) { nav.classList.add('on'); if (curSec === 'women') nav.classList.add('w'); }
+  curPg = pg;
+
+  if (pg === 'd') loadD();
+  if (pg === 'a') loadR();
+  if (pg === 'p') loadP();
+  if (pg === 'c') loadC();
+  if (pg === 'u') loadU();
+}
+
+function setSec(s, btn) {
+  curSec = s;
+  document.querySelectorAll('.sec-btn').forEach(b => b.classList.remove('on'));
+  btn.classList.add('on');
+  document.getElementById('dsub').textContent =
+    `نظرة شاملة على بلاغات قسم ${s === 'men' ? 'الرجال' : 'النساء'}`;
+  loadBadges();
+  if (curPg === 'd') loadD();
+  else if (curPg === 'a') loadR();
+  else if (curPg === 'p') loadP();
+  else if (curPg === 'c') loadC();
+}
+
+// ═══════════════════════════════════════════════════════════
+// DASHBOARD
+// ═══════════════════════════════════════════════════════════
+const CAT_COLOR = {
+  التكييف:'#0ea5e9', الكهرباء:'#f59e0b', النظافة:'#22c55e',
+  مفقودات:'#ec4899', عربية:'#a855f7', أخرى:'#64748b',
+};
+
+async function loadD() {
+  try {
+    const q = ME.role === 'supervisor' ? '' : `?section=${curSec}`;
+    const s = await api('GET', '/reports/stats' + q);
+
+    document.getElementById('st').textContent  = s.total  || 0;
+    document.getElementById('so').textContent  = (s.pending || 0) + (s.in_progress || 0);
+    document.getElementById('scl').textContent = s.closed || 0;
+    document.getElementById('su').textContent  = s.urgent || 0;
+    document.getElementById('avgr').textContent = s.avg_mins
+      ? Math.round(s.avg_mins) + ' دقيقة' : '—';
+    document.getElementById('s-p').textContent = (s.pending      || 0) + ' بانتظار الاستلام';
+    document.getElementById('s-i').textContent = (s.in_progress  || 0) + ' تحت المعالجة';
+    document.getElementById('s-c').textContent = (s.closed       || 0) + ' مكتملة';
+
+    // Category bars
+    const cats = s.byCategory || [];
+    const mx   = cats.reduce((m, c) => Math.max(m, c.count), 1);
+    document.getElementById('catbars').innerHTML = cats.map(c =>
+      `<div class="pw">
+        <div class="pr-row">
+          <span style="font-size:11px;font-weight:600">${c.category}</span>
+          <span style="font-size:10px;color:var(--muted)">${c.count} بلاغ</span>
+        </div>
+        <div class="pbar">
+          <div class="pfill" style="width:${Math.round(c.count / mx * 100)}%;background:${CAT_COLOR[c.category] || '#64748b'}"></div>
+        </div>
+      </div>`
+    ).join('');
+
+    // Timeline
+    const qs2 = ME.role === 'supervisor' ? '?limit=8' : `?section=${curSec}&limit=8`;
+    const { reports } = await api('GET', '/reports' + qs2);
+    const SDOT = { pending:'w', in_progress:'pr', closed:'ok' };
+    document.getElementById('tldash').innerHTML = (reports || []).map(r =>
+      `<div class="tli">
+        <div class="tld ${SDOT[r.status] || 'pr'}"></div>
+        <div class="tlt">${fd(r.created_at)}</div>
+        <div class="tlx">${escTrunc(r.description, 55)}</div>
+        <div class="tls">${esc(r.supervisor_name)} | غرفة ${esc(r.room)}</div>
+      </div>`
+    ).join('');
+
+    const today = new Date().toLocaleDateString('en-CA');
+    document.getElementById('tdc').textContent =
+      (reports || []).filter(r => r.created_at.startsWith(today)).length;
+
+    loadBadges();
+  } catch (e) { console.error('[dash]', e); }
+}
+
+async function loadBadges() {
+  try {
+    const q = ME.role === 'supervisor' ? '?limit=500' : `?section=${curSec}&limit=500`;
+    const { reports } = await api('GET', '/reports' + q);
+    cache = reports || [];
+    document.getElementById('nb-o').textContent = cache.filter(r => r.status !== 'closed').length;
+    document.getElementById('nb-p').textContent = cache.filter(r => r.status === 'pending').length;
+  } catch {}
+}
+
+// ═══════════════════════════════════════════════════════════
+// REPORTS TABLE
+// ═══════════════════════════════════════════════════════════
+const CAT_CLS  = { التكييف:'c1', الكهرباء:'c2', النظافة:'c3', مفقودات:'c5', عربية:'c4', أخرى:'c6' };
+const CAT_ICON = { التكييف:'❄️', الكهرباء:'⚡', النظافة:'🧹', مفقودات:'🔍', عربية:'♿', أخرى:'📌' };
+const S_CLS    = { pending:'s-p', in_progress:'s-i', closed:'s-c' };
+const S_LBL    = { pending:'⏳ انتظار', in_progress:'🔵 معالجة', closed:'✅ مغلق' };
+
+function catBadge(cat) {
+  return `<span class="cbadge ${CAT_CLS[cat] || 'c6'}">${CAT_ICON[cat] || '📌'} ${cat}</span>`;
+}
+function statusBadge(s) {
+  return `<span class="badge ${S_CLS[s] || 's-i'}">${S_LBL[s] || s}</span>`;
+}
+function fd(d) {
+  if (!d) return '—';
+  return new Date(d).toLocaleString('ar-SA', {
+    month: 'short', day: 'numeric',
+    hour: '2-digit', minute: '2-digit',
+  });
+}
+
+async function loadR() {
+  const sec = ME.role === 'supervisor' ? '' : `&section=${curSec}`;
+  const st  = document.getElementById('fst').value;
+  const ca  = document.getElementById('fca').value;
+  const pr  = document.getElementById('fpr').value;
+  const q   = document.getElementById('fs').value;
+  let qs    = `?limit=300${sec}`;
+  if (st) qs += `&status=${st}`;
+  if (ca) qs += `&category=${encodeURIComponent(ca)}`;
+  if (pr) qs += `&priority=${pr}`;
+  if (q)  qs += `&search=${encodeURIComponent(q)}`;
+
+  document.getElementById('asub').textContent = curSec === 'men' ? 'قسم الرجال' : 'قسم النساء';
+  const tb = document.getElementById('rtb');
+  tb.innerHTML = '<tr><td colspan="10" class="ld"><div class="spin"></div> جاري التحميل...</td></tr>';
+
+  try {
+    const { reports, total } = await api('GET', '/reports' + qs);
+    cache = reports || [];
+    document.getElementById('rc').textContent = total;
+    const canClose = ME.role !== 'supervisor';
+
+    tb.innerHTML = cache.map(r => {
+      const mins = r.response_mins
+        ? r.response_mins + ' دق'
+        : (r.status === 'closed' ? '—' : '...');
+      const act = r.status !== 'closed' && canClose
+        ? `<button class="btn btn-ok" onclick="openCM(${r.id})">إغلاق ✓</button>`
+        : (r.status === 'closed'
+            ? `<span style="color:var(--ok);font-size:10px">✓ مغلق</span>`
+            : `<span style="font-size:10px;color:var(--muted)">—</span>`);
+
+      return `<tr>
+        <td class="num">${r.id}</td>
+        <td style="font-size:10px;color:var(--muted);white-space:nowrap">${fd(r.created_at)}</td>
+        <td style="font-weight:600;white-space:nowrap">${esc(r.supervisor_name)}</td>
+        <td style="color:var(--pr2);font-weight:700">${esc(r.room)}${r.bed ? '/' + r.bed : ''}</td>
+        <td>${catBadge(r.category)}</td>
+        <td style="font-size:11px;max-width:200px">${escTrunc(r.description, 65)}</td>
+        <td>${statusBadge(r.status)}</td>
+        <td>${r.priority === 'urgent'
+          ? '<span class="badge s-u">🚨 عاجل</span>'
+          : '<span style="font-size:10px;color:var(--muted)">عادي</span>'}</td>
+        <td style="font-size:11px;color:var(--muted)">${mins}</td>
+        <td>${act}</td>
+      </tr>`;
+    }).join('') || '<tr><td colspan="10" style="text-align:center;padding:40px;color:var(--muted)">لا توجد بلاغات</td></tr>';
+  } catch (e) {
+    tb.innerHTML = `<tr><td colspan="10" style="text-align:center;padding:40px;color:var(--err)">${e.message}</td></tr>`;
+  }
+}
+
+async function loadP() {
+  try {
+    const sec = ME.role === 'supervisor' ? '' : `&section=${curSec}`;
+    const { reports } = await api('GET', `/reports?status=pending${sec}&limit=200`);
+    document.getElementById('pc').textContent = reports.length;
+    const canClose = ME.role !== 'supervisor';
+
+    document.getElementById('ptb').innerHTML = (reports || []).map(r =>
+      `<tr>
+        <td class="num">${r.id}</td>
+        <td style="font-size:10px;color:var(--muted);white-space:nowrap">${fd(r.created_at)}</td>
+        <td style="font-weight:600">${esc(r.supervisor_name)}</td>
+        <td style="color:var(--pr2);font-weight:700">${esc(r.room)}</td>
+        <td>${catBadge(r.category)}</td>
+        <td style="font-size:11px">${escTrunc(r.description, 75)}</td>
+        <td>${r.priority === 'urgent'
+          ? '<span class="badge s-u">🚨 عاجل</span>'
+          : '<span style="font-size:10px;color:var(--muted)">عادي</span>'}</td>
+        <td>${canClose
+          ? `<button class="btn btn-ok" onclick="openCM(${r.id})">إغلاق ✓</button>`
+          : '—'}</td>
+      </tr>`
+    ).join('') ||
+    '<tr><td colspan="8" style="text-align:center;padding:48px;color:var(--ok);font-weight:700;font-size:16px">🎉 لا توجد بلاغات معلقة!</td></tr>';
+  } catch (e) { console.error('[pending]', e); }
+}
+
+async function loadC() {
+  try {
+    const sec = ME.role === 'supervisor' ? '' : `&section=${curSec}`;
+    const { reports } = await api('GET', `/reports?status=closed${sec}&limit=200`);
+    document.getElementById('cc').textContent = reports.length;
+
+    document.getElementById('ctb').innerHTML = (reports || []).map(r =>
+      `<tr>
+        <td class="num">${r.id}</td>
+        <td style="font-size:10px;color:var(--muted);white-space:nowrap">${fd(r.created_at)}</td>
+        <td style="font-weight:600">${esc(r.supervisor_name)}</td>
+        <td style="color:var(--pr2);font-weight:700">${esc(r.room)}</td>
+        <td style="font-size:11px">${escTrunc(r.description, 80)}</td>
+        <td style="color:var(--ok);font-size:11px;font-weight:700">${r.response_mins ? r.response_mins + ' دق' : '—'}</td>
+        <td style="font-size:11px;color:var(--muted)">${r.closed_by_name || '—'}</td>
+      </tr>`
+    ).join('');
+  } catch (e) { console.error('[closed]', e); }
+}
+
+async function loadU() {
+  try {
+    const users = await api('GET', '/users');
+    const RL = { supervisor:'مشرف', section_manager:'مدير قسم', general_manager:'مدير عام' };
+    const RC = { supervisor:'rc-sv', section_manager:'rc-sm', general_manager:'rc-gm' };
+    const SL = { men:'الرجال', women:'النساء', both:'كلاهما' };
+
+    document.getElementById('utb').innerHTML = users.map(u =>
+      `<tr>
+        <td class="num">${u.id}</td>
+        <td style="font-weight:700">${esc(u.name)}</td>
+        <td style="font-family:monospace;font-size:11px;color:var(--muted)">${esc(u.username)}</td>
+        <td><span class="rc ${RC[u.role] || 'rc-sv'}">${RL[u.role] || u.role}</span></td>
+        <td style="font-size:11px">${SL[u.section] || u.section}</td>
+        <td style="font-size:11px">${u.phone || '—'}</td>
+        <td style="text-align:center">${u.wa_notify ? '✅' : '❌'}</td>
+        <td><span style="font-size:11px;color:${u.active ? 'var(--ok)' : 'var(--err)'};font-weight:700">
+          ${u.active ? 'نشط' : 'معطل'}</span></td>
+        <td style="display:flex;gap:5px">
+          <button class="btn" onclick="editU(${u.id})">تعديل</button>
+          ${u.active && u.id !== ME?.id
+            ? `<button class="btn" style="color:var(--err)" onclick="deactU(${u.id})">تعطيل</button>`
+            : ''}
+        </td>
+      </tr>`
+    ).join('');
+  } catch (e) { console.error('[users]', e); }
+}
+
+// ═══════════════════════════════════════════════════════════
+// ACTIONS
+// ═══════════════════════════════════════════════════════════
+function clearF() {
+  ['fst','fca','fpr'].forEach(id => document.getElementById(id).value = '');
+  document.getElementById('fs').value = '';
+  loadR();
+}
+
+function exportCSV() {
+  if (!cache.length) return toast('لا توجد بيانات للتصدير', 'err');
+  const rows = [['#','الوقت','المشرف','الغرفة','التصنيف','البلاغ','الحالة','الأولوية','مدة الاستجابة']];
+  cache.forEach(r => rows.push([
+    r.id, r.created_at, r.supervisor_name, r.room,
+    r.category, `"${r.description}"`, r.status, r.priority, r.response_mins || ''
+  ]));
+  const csv  = rows.map(r => r.join(',')).join('\n');
+  const blob = new Blob(['\ufeff' + csv], { type: 'text/csv;charset=utf-8' });
+  const a    = document.createElement('a');
+  a.href     = URL.createObjectURL(blob);
+  a.download = `بلاغات_${curSec}_${new Date().toLocaleDateString('en-CA')}.csv`;
+  a.click();
+}
+
+function openRM() {
+  ['r-rm','r-bd','r-ds'].forEach(id => document.getElementById(id).value = '');
+  document.getElementById('r-pr').value = 'normal';
+  document.getElementById('r-ca').value = 'التكييف';
+  if (ME?.role !== 'supervisor') document.getElementById('r-s').value = curSec;
+  document.getElementById('m-r').classList.add('on');
+  setTimeout(() => document.getElementById('r-rm').focus(), 200);
+}
+
+async function submitR() {
+  const section     = document.getElementById('r-s').value;
+  const room        = document.getElementById('r-rm').value.trim();
+  const bed         = document.getElementById('r-bd').value.trim();
+  const category    = document.getElementById('r-ca').value;
+  const priority    = document.getElementById('r-pr').value;
+  const description = document.getElementById('r-ds').value.trim();
+
+  if (!room)        return toast('يرجى إدخال رقم الغرفة', 'err');
+  if (!description) return toast('يرجى كتابة تفاصيل البلاغ', 'err');
+
+  try {
+    await api('POST', '/reports', { section, room, bed, category, priority, description });
+    closeM('m-r');
+    toast('✅ تم رفع البلاغ وإشعار الإدارة عبر الواتساب!', 'ok');
+    loadBadges();
+    if (curPg === 'd') loadD();
+    else if (curPg === 'a') loadR();
+    else if (curPg === 'p') loadP();
+  } catch (e) { toast(e.message, 'err'); }
+}
+
+function openCM(reportId) {
+  document.getElementById('cl-id').value = reportId;
+  document.getElementById('cl-n').value  = '';
+  document.getElementById('m-cl').classList.add('on');
+}
+
+async function confirmClose() {
+  const id   = document.getElementById('cl-id').value;
+  const note = document.getElementById('cl-n').value.trim();
+  try {
+    await api('PATCH', `/reports/${id}/status`, { status: 'closed', note });
+    closeM('m-cl');
+    toast('✅ تم إغلاق البلاغ وإشعار المشرف!', 'ok');
+    loadBadges();
+    if (curPg === 'd') loadD();
+    else if (curPg === 'a') loadR();
+    else if (curPg === 'p') loadP();
+  } catch (e) { toast(e.message, 'err'); }
+}
+
+function openUM(user = null) {
+  document.getElementById('umt').textContent = user ? '✏️ تعديل المستخدم' : '➕ إضافة مستخدم';
+  document.getElementById('u-id').value  = user?.id  || '';
+  document.getElementById('u-n').value   = user?.name || '';
+  document.getElementById('u-u').value   = user?.username || '';
+  document.getElementById('u-ph').value  = user?.phone || '';
+  document.getElementById('u-p').value   = '';
+  document.getElementById('u-r').value   = user?.role    || 'supervisor';
+  document.getElementById('u-s').value   = user?.section || 'men';
+  document.getElementById('u-wa').checked = user?.wa_notify !== 0;
+  document.getElementById('upr').textContent = user ? '' : '*';
+  document.getElementById('m-u').classList.add('on');
+}
+
+async function editU(id) {
+  try {
+    const users = await api('GET', '/users');
+    const u = users.find(x => x.id === id);
+    if (u) openUM(u);
+  } catch (e) { toast(e.message, 'err'); }
+}
+
+async function submitU() {
+  const id       = document.getElementById('u-id').value;
+  const name     = document.getElementById('u-n').value.trim();
+  const username = document.getElementById('u-u').value.trim();
+  const password = document.getElementById('u-p').value;
+  const phone    = document.getElementById('u-ph').value.trim();
+  const role     = document.getElementById('u-r').value;
+  const section  = document.getElementById('u-s').value;
+  const wa_notify = document.getElementById('u-wa').checked ? 1 : 0;
+
+  if (!name || !username)      return toast('الاسم واسم المستخدم مطلوبان', 'err');
+  if (!id && !password)        return toast('كلمة المرور مطلوبة لمستخدم جديد', 'err');
+  if (password && password.length < 6) return toast('كلمة المرور يجب أن تكون 6 أحرف على الأقل', 'err');
+
+  try {
+    const body = { name, phone, role, section, wa_notify };
+    if (password) body.password = password;
+    if (!id) { body.username = username; }
+
+    if (id)  await api('PUT',  `/users/${id}`, body);
+    else     await api('POST', `/users`,        { ...body, username, password });
+
+    closeM('m-u');
+    toast(id ? '✅ تم تحديث المستخدم' : '✅ تم إنشاء المستخدم بنجاح', 'ok');
+    loadU();
+  } catch (e) { toast(e.message, 'err'); }
+}
+
+async function deactU(id) {
+  if (!confirm('هل تريد تعطيل هذا المستخدم؟')) return;
+  try {
+    await api('DELETE', `/users/${id}`);
+    toast('تم تعطيل المستخدم', 'ok');
+    loadU();
+  } catch (e) { toast(e.message, 'err'); }
+}
+
+function closeM(id) { document.getElementById(id).classList.remove('on'); }
+
+// ═══════════════════════════════════════════════════════════
+// TOAST
+// ═══════════════════════════════════════════════════════════
+function toast(msg, type = 'ok') {
+  const el = document.getElementById('toast');
+  el.textContent = msg;
+  el.className   = `toast on ${type}`;
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => el.classList.remove('on'), 3800);
+}
+
+// ═══════════════════════════════════════════════════════════
+// AUTO-REFRESH (every 60s on dashboard)
+// ═══════════════════════════════════════════════════════════
+setInterval(() => {
+  if (curPg === 'd' && ME) loadD();
+}, 60000);
+</script>
+</body>
+</html>
